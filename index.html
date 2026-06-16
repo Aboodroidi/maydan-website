@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Maydan — Book football pitches in Muscat</title>
+<meta name="description" content="Maydan is the easiest way to discover and book football pitches across Muscat, Oman. Coming soon to iPhone." />
+<link rel="icon" type="image/svg+xml" href="assets/img/logo_electric_blue.svg" />
+<link rel="apple-touch-icon" href="assets/img/app-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#"><img src="assets/img/wordmark_electric_blue.svg" alt="Maydan" /></a>
+    <nav class="nav-links">
+      <a class="navlink" href="#about" data-en="About" data-ar="عن ميدان">About</a>
+      <a class="navlink" href="#services" data-en="Services" data-ar="خدماتنا">Services</a>
+      <a class="navlink" href="#download" data-en="Download" data-ar="التطبيق">Download</a>
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">العربية</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <img class="watermark" src="assets/img/logo_electric_blue.svg" alt="" aria-hidden="true" />
+    <div class="wrap">
+      <span class="pill" data-en="🇴🇲 Made for Muscat" data-ar="🇴🇲 صُنع لمسقط">🇴🇲 Made for Muscat</span>
+      <h1 data-en="Where sport meets simplicity" data-ar="حيث تلتقي الرياضة بالبساطة">Where sport meets simplicity</h1>
+      <p data-en="Discover and book football pitches across Muscat — in seconds. Maydan brings players and pitches together."
+         data-ar="اكتشف واحجز ملاعب كرة القدم في مسقط — في ثوانٍ. يجمع ميدان بين اللاعبين والملاعب في مكان واحد.">
+        Discover and book football pitches across Muscat — in seconds. Maydan brings players and pitches together.</p>
+      <div class="cta-row">
+        <a class="btn" href="#download"><span data-en="Get the app" data-ar="حمّل التطبيق">Get the app</span></a>
+        <span class="soon-tag" data-en="Coming soon to iPhone" data-ar="قريبًا على آيفون">Coming soon to iPhone</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="wrap section-head">
+      <h2 data-en="About Maydan" data-ar="عن ميدان">About Maydan</h2>
+      <p data-en="Maydan is Oman's easiest way to find and book football pitches. Whether you're organising a five-a-side with friends or running a venue, Maydan puts the whole experience in one app — in Arabic and English."
+         data-ar="ميدان هو أسهل طريقة في عُمان للعثور على ملاعب كرة القدم وحجزها. سواء كنت تنظّم مباراة خماسية مع أصدقائك أو تدير ملعبًا، يجمع ميدان التجربة كاملة في تطبيق واحد — بالعربية والإنجليزية.">
+        Maydan is Oman's easiest way to find and book football pitches. Whether you're organising a five-a-side with friends or running a venue, Maydan puts the whole experience in one app — in Arabic and English.</p>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-en="What you can do" data-ar="ماذا يمكنك أن تفعل">What you can do</h2>
+        <p data-en="Everything you need to play, from finding a pitch to splitting the bill."
+           data-ar="كل ما تحتاجه للعب، من إيجاد ملعب إلى تقسيم الفاتورة.">
+          Everything you need to play, from finding a pitch to splitting the bill.</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="ico">🗺️</div>
+          <h3 data-en="Discover pitches" data-ar="اكتشف الملاعب">Discover pitches</h3>
+          <p data-en="Browse pitches near you on a map and filter by size, surface and price."
+             data-ar="تصفّح الملاعب القريبة منك على الخريطة وصفِّ حسب الحجم والأرضية والسعر.">
+            Browse pitches near you on a map and filter by size, surface and price.</p>
+        </div>
+        <div class="card">
+          <div class="ico">⚡</div>
+          <h3 data-en="Book in seconds" data-ar="احجز في ثوانٍ">Book in seconds</h3>
+          <p data-en="Pick a slot and confirm instantly, with secure payment in Omani Rial."
+             data-ar="اختر موعدًا وأكّد فورًا، مع دفع آمن بالريال العُماني.">
+            Pick a slot and confirm instantly, with secure payment in Omani Rial.</p>
+        </div>
+        <div class="card">
+          <div class="ico">🤝</div>
+          <h3 data-en="Split the cost" data-ar="قسّم التكلفة">Split the cost</h3>
+          <p data-en="Pay only your share and invite teammates to pay theirs with a simple code."
+             data-ar="ادفع حصتك فقط وادعُ زملاءك لدفع أنصبتهم برمز بسيط.">
+            Pay only your share and invite teammates to pay theirs with a simple code.</p>
+        </div>
+        <div class="card">
+          <div class="ico">📊</div>
+          <h3 data-en="For pitch owners" data-ar="لأصحاب الملاعب">For pitch owners</h3>
+          <p data-en="Manage bookings, availability and earnings from one simple dashboard."
+             data-ar="أدِر الحجوزات والأوقات المتاحة والأرباح من لوحة تحكّم واحدة بسيطة.">
+            Manage bookings, availability and earnings from one simple dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download -->
+  <section id="download">
+    <div class="wrap">
+      <div class="box">
+        <img class="app-icon" src="assets/img/app-icon.png" alt="Maydan app icon" />
+        <h2 data-en="Coming soon" data-ar="قريبًا">Coming soon</h2>
+        <p data-en="Maydan launches soon on iPhone. The pitches of Muscat, a tap away."
+           data-ar="ينطلق ميدان قريبًا على آيفون. ملاعب مسقط على بُعد لمسة.">
+          Maydan launches soon on iPhone. The pitches of Muscat, a tap away.</p>
+        <span class="store-badge">
+          <svg width="22" height="22" viewBox="0 0 384 512" fill="#0B1220" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+          <span style="text-align:start">
+            <span class="small" data-en="Coming soon on the" data-ar="قريبًا على">Coming soon on the</span>
+            App Store
+          </span>
+        </span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <img src="assets/img/wordmark_electric_blue.svg" alt="Maydan" />
+    <div data-en="© 2026 Maydan · Muscat, Oman" data-ar="© 2026 ميدان · مسقط، عُمان">© 2026 Maydan · Muscat, Oman</div>
+    <div><a href="mailto:support@maydan.om">support@maydan.om</a></div>
+  </div>
+</footer>
+
+<script>
+  function applyLang(lang) {
+    var isAr = lang === 'ar';
+    document.documentElement.lang = isAr ? 'ar' : 'en';
+    document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      el.textContent = isAr ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    });
+    document.getElementById('langBtn').textContent = isAr ? 'English' : 'العربية';
+    try { localStorage.setItem('maydan_lang', lang); } catch (e) {}
+  }
+  function toggleLang() {
+    var current = document.documentElement.lang === 'ar' ? 'ar' : 'en';
+    applyLang(current === 'ar' ? 'en' : 'ar');
+  }
+  (function () {
+    var saved; try { saved = localStorage.getItem('maydan_lang'); } catch (e) {}
+    if (saved === 'ar') applyLang('ar');
+  })();
+</script>
+
+</body>
+</html>
