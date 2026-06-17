@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "4TX382U4Y9.app.maydan.Maydan",
+        "paths": ["/join", "/join/*"]
+      }
+    ]
+  }
+}
