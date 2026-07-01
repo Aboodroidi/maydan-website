@@ -7,104 +7,99 @@
 @font-face { font-family: "Winco"; src: url("/assets/fonts/winco-black.otf") format("opentype"); font-weight: 800; font-display: swap; }
 @font-face { font-family: "Winco"; src: url("/assets/fonts/winco-ultra-black.otf") format("opentype"); font-weight: 900; font-display: swap; }
 
-/* ---- Brand tokens (clean, light site) ---- */
+/* ---- App theme (dark, clean — mirrors the Maydan iOS app) ---- */
 @theme {
-  --color-bg: #ffffff;
-  --color-surface: #f5f7fa;
-  --color-ink: #0b1220;
-  --color-muted: #5b6472;
-  --color-border: #e6e9ef;
+  --color-bg: #070b14;
+  --color-bg-soft: #0f1626;
+  --color-surface: #131c2e;
+  --color-surface-2: #1a2439;
+  --color-ink: #f3f6fc;
+  --color-muted: #8a97ad;
+  --color-border: rgba(255, 255, 255, 0.08);
   --color-electric: #2563eb;
-  --color-electric-dark: #1d4ed8;
+  --color-electric-bright: #4f7bf7;
 
   --font-sans: "Winco", var(--font-cairo, "Cairo"), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-ar: var(--font-cairo, "Cairo"), "Winco", sans-serif;
 }
 
-:root {
-  color-scheme: light;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+:root { color-scheme: dark; }
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  line-height: 1.6;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+html[dir="rtl"] body { font-family: var(--font-ar); }
 
-html[dir="rtl"] body {
-  font-family: var(--font-ar);
-}
-
-/* Subtle hero backdrop (a light gradient, not glass). */
-.hero-bg {
-  background:
-    radial-gradient(60% 50% at 50% 0%, rgba(37, 99, 235, 0.1), transparent 70%),
-    linear-gradient(180deg, #ffffff, var(--color-surface));
+/* Smooth, consistent transitions across interactive elements. */
+a, button, .card, .pitch-row, .chip, .navlink {
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
 }
 
-/* ---- Buttons ---- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 16px;
-  padding: 15px 26px;
-  border-radius: 14px;
-  transition: background 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
-}
-.btn-primary {
-  background: var(--color-electric);
-  color: #fff;
-}
-.btn-primary:hover {
-  background: var(--color-electric-dark);
-  transform: translateY(-1px);
-}
-.btn-secondary {
-  background: var(--color-surface);
-  color: var(--color-ink);
-  border: 1px solid var(--color-border);
-}
-.btn-secondary:hover {
-  background: #eef1f6;
-}
-
-/* ---- Cards ---- */
+/* Cards */
 .card {
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 18px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 16px;
 }
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(11, 18, 32, 0.08);
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: none; cursor: pointer; font-family: inherit; font-weight: 700;
+  border-radius: 12px; padding: 12px 20px; font-size: 15px;
+}
+.btn-primary { background: var(--color-electric); color: #fff; }
+.btn-primary:hover { background: var(--color-electric-bright); }
+.btn-ghost { background: var(--color-surface); color: var(--color-ink); border: 1px solid var(--color-border); }
+.btn-ghost:hover { background: var(--color-surface-2); }
+
+/* Chips */
+.chip {
+  border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 600;
+  border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-muted);
+  cursor: pointer; white-space: nowrap;
+}
+.chip:hover { color: var(--color-ink); }
+.chip[data-active="true"] {
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(79, 139, 255, 0.5);
+  color: var(--color-electric-bright);
+}
+
+/* Thin scrollbars for the list panes */
+.scroll-thin { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+.scroll-thin::-webkit-scrollbar { width: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.16); border-radius: 8px; }
+
+/* Fade-in for content as it loads */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fadeUp 0.35s ease both; }
 
 /* ---- Legal / long-form content ---- */
 .legal-prose { color: var(--color-muted); font-size: 15.5px; }
-.legal-prose h2 { color: var(--color-ink); font-size: 20px; font-weight: 800; margin: 30px 0 10px; letter-spacing: -0.01em; }
+.legal-prose h2 { color: var(--color-ink); font-size: 20px; font-weight: 800; margin: 30px 0 10px; }
 .legal-prose h2:first-child { margin-top: 0; }
 .legal-prose h3 { color: var(--color-ink); font-size: 16px; font-weight: 700; margin: 20px 0 8px; }
 .legal-prose p { margin: 10px 0; }
 .legal-prose ul { margin: 10px 0; padding-inline-start: 22px; list-style: disc; }
 .legal-prose li { margin: 6px 0; }
-.legal-prose a { color: var(--color-electric); font-weight: 600; }
-.legal-prose a:hover { color: var(--color-electric-dark); }
+.legal-prose a { color: var(--color-electric-bright); font-weight: 600; }
 .legal-prose strong { color: var(--color-ink); font-weight: 700; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .btn-primary:hover, .card:hover { transform: none; }
+  .card-hover:hover { transform: none; }
+  .fade-up { animation: none; }
 }
