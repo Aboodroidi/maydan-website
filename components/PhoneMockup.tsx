@@ -1,5 +1,3 @@
-import { MaydanMark } from "./MaydanMark";
-
 /** A glassy iPhone frame showing a miniature of the app's Discover screen. */
 export function PhoneMockup() {
   return (
@@ -14,15 +12,14 @@ export function PhoneMockup() {
         {/* top brand glow */}
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-40"
-          style={{ background: "radial-gradient(70% 100% at 50% 0%, rgba(47,107,255,0.4), transparent 70%)" }}
+          style={{ background: "radial-gradient(70% 100% at 50% 0%, rgba(37,99,235,0.42), transparent 70%)" }}
         />
         {/* notch */}
         <div className="absolute left-1/2 top-2 h-5 w-24 -translate-x-1/2 rounded-full bg-black/70" />
 
-        {/* header */}
-        <div className="flex items-center gap-2 px-4 pt-9">
-          <MaydanMark size={22} />
-          <span className="text-[15px] font-extrabold">Maydan</span>
+        {/* header — real electric wordmark */}
+        <div className="flex items-center px-4 pt-9">
+          <img src="/assets/img/wordmark_electric_blue.svg" alt="Maydan" className="h-4 w-auto" />
           <span className="ms-auto grid h-7 w-7 place-items-center rounded-full glass text-[12px]">⚽</span>
         </div>
 
@@ -35,10 +32,7 @@ export function PhoneMockup() {
 
         {/* pitch card */}
         <div className="mx-4 mt-4 overflow-hidden rounded-2xl glass">
-          <div
-            className="h-24 w-full"
-            style={{ background: "linear-gradient(135deg, #1c3a6e, #2f6bff)" }}
-          />
+          <div className="h-24 w-full" style={{ background: "linear-gradient(135deg, #1c3a6e, #2563eb)" }} />
           <div className="p-3">
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-bold">Goal One Centre</span>

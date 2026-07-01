@@ -2,16 +2,15 @@
 
 import Link from "next/link";
 import { useLang } from "./LangProvider";
-import { MaydanMark } from "./MaydanMark";
 
 export function Nav() {
   const { t, toggle } = useLang();
   return (
     <header className="sticky top-0 z-50 px-4 pt-3">
       <nav className="glass mx-auto flex h-14 max-w-5xl items-center justify-between rounded-full px-4 sm:px-5">
-        <Link href="/" className="flex items-center gap-2.5 font-extrabold text-[19px]">
-          <MaydanMark size={30} />
-          <span>Maydan</span>
+        <Link href="/" aria-label="Maydan" className="flex items-center">
+          {/* Real Maydan wordmark (white) */}
+          <img src="/assets/img/wordmark_white.svg" alt="Maydan" className="h-6 w-auto sm:h-7" />
         </Link>
 
         <div className="flex items-center gap-6">
