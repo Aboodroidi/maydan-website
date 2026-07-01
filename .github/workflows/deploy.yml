@@ -1,12 +1,12 @@
 name: Build & publish static site
 
-# Builds the Next.js site and publishes the static export (out/) to the
-# `deploy` branch. Point Plesk's Git deployment at the `deploy` branch (its
-# files are the ready-to-serve site) — see DEPLOY.md.
+# The Next.js source lives on the `source` branch. On every push to `source`
+# this builds the static export (out/) and publishes it to `main`, which Plesk
+# serves directly as maydan.om. Edit on `source`; `main` is generated. See DEPLOY.md.
 
 on:
   push:
-    branches: [main, nextjs-rewrite]
+    branches: [source]
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Publish out/ to the deploy branch
+      - name: Publish built site to main (served by Plesk)
         run: |
           cd out
           touch .nojekyll
@@ -39,4 +39,4 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -q -m "Deploy ${GITHUB_SHA} from ${GITHUB_REF_NAME}"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:deploy
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
