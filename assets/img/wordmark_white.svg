@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200">
+  <g transform="translate(0,20)">
+    <!-- M logo mark scaled down -->
+    <g transform="translate(65,80) scale(0.22)">
+      <path d="
+        M -160,-180
+        L -160,180
+        L -110,180
+        L -110,-100
+        L 0,-10
+        L 110,-100
+        L 110,180
+        L 160,180
+        L 160,-180
+        L 0,-20
+        Z
+      " fill="#FFFFFF"/>
+      <circle cx="0" cy="120" r="38" fill="#FFFFFF"/>
+    </g>
+    <!-- 'aydan' text using clean sans-serif style -->
+    <text x="130" y="115" font-family="Inter, Helvetica, Arial, sans-serif" font-size="90" font-weight="400" letter-spacing="4" fill="#FFFFFF">aydan</text>
+  </g>
+</svg>
