@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { firebaseReady } from "../../lib/firebase";
 import { useAuth } from "../../lib/auth";
 import { useLang } from "../../lib/i18n";
 import { omr } from "../../lib/data";
@@ -11,7 +9,6 @@ import {
   type OwnerBookingStatus,
 } from "../../lib/owner";
 import type { Booking } from "../../lib/types";
-import { SetupNotice } from "../../components/SetupNotice";
 
 type Filter = "all" | "confirmed" | "completed" | "cancelled";
 
@@ -52,7 +49,7 @@ function StatusPill({ status, ar }: { status: string; ar: boolean }) {
 
 export default function OwnerBookingsPage() {
   const { ar } = useLang();
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { pitches, loading: pitchesLoading } = useOwnedPitches(user?.uid);
   const pitchIds = useMemo(() => pitches.map((p) => p.id), [pitches]);
   const liveBookings = useOwnerBookings(pitchIds);
@@ -93,41 +90,8 @@ export default function OwnerBookingsPage() {
     }
   };
 
-  if (!firebaseReady) {
-    return (
-      <SetupNotice
-        title={ar ? "اربط قاعدة بيانات Firebase" : "Connect the Firebase database"}
-        body={
-          ar
-            ? "أضف مفاتيح VITE_FIREBASE_* إلى ملف البيئة ثم أعد التحميل لعرض حجوزات ملاعبك."
-            : "Add the VITE_FIREBASE_* keys to your env file and reload to see your pitch bookings."
-        }
-      />
-    );
-  }
-
-  if (authLoading || (user && pitchesLoading)) {
+  if (pitchesLoading) {
     return <p className="p-8 text-sm text-muted">{ar ? "جارٍ التحميل…" : "Loading…"}</p>;
-  }
-
-  if (!user) {
-    return (
-      <div className="grid h-full place-items-center p-8">
-        <div className="card max-w-md p-7 text-center fade-up">
-          <h1 className="text-lg font-bold">
-            {ar ? "سجل الدخول لإدارة الحجوزات" : "Sign in to manage bookings"}
-          </h1>
-          <p className="mt-3 text-sm text-muted">
-            {ar
-              ? "أدوات المالك تتطلب حساباً مسجلاً. سجل الدخول بنفس حساب التطبيق."
-              : "Owner tools need a signed in account. Use the same account as the iOS app."}
-          </p>
-          <Link to="/signin" className="btn btn-primary mt-5">
-            {ar ? "تسجيل الدخول" : "Sign in"}
-          </Link>
-        </div>
-      </div>
-    );
   }
 
   if (pitches.length === 0) {
@@ -191,7 +155,7 @@ export default function OwnerBookingsPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] space-y-5 px-4 py-6 sm:px-6 fade-up">
+    <div className="mx-auto w-full max-w-[1200px] space-y-5 px-4 py-6 sm:px-6 fade-up">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
           {ar ? "حجوزات الملاعب" : "Pitch bookings"}

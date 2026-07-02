@@ -29,11 +29,14 @@ export function Shell() {
 
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden">
-      <header className="glass-top z-20">
+      <header
+        className="z-20 shadow-[0_2px_24px_rgba(29,78,216,0.28)]"
+        style={{ background: "linear-gradient(180deg, #2f6af0, #1d4ed8)" }}
+      >
         <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex shrink-0 items-center" aria-label="Maydan home">
-            <img src="/assets/img/wordmark_electric_blue.svg" alt="Maydan" className="hidden h-9 w-auto sm:block" />
-            <img src="/assets/img/logo_electric_blue.svg" alt="Maydan" className="h-8 w-8 sm:hidden" />
+            <img src="/assets/img/wordmark_white.svg" alt="Maydan" className="hidden h-11 w-auto sm:block" />
+            <img src="/assets/img/logo_white.svg" alt="Maydan" className="h-9 w-9 sm:hidden" />
           </Link>
 
           {/* Primary nav: pills on desktop, icon row on mobile */}
@@ -46,8 +49,8 @@ export function Shell() {
                 className={({ isActive }) =>
                   `navlink flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-[14.5px] font-bold sm:px-4 ${
                     isActive
-                      ? "bg-electric/10 text-electric"
-                      : "text-muted hover:bg-surface-2 hover:text-ink"
+                      ? "bg-white text-electric shadow-sm"
+                      : "text-white/85 hover:bg-white/15 hover:text-white"
                   }`
                 }
               >
@@ -71,7 +74,7 @@ export function Shell() {
           <div className="flex shrink-0 items-center gap-2">
             <button
               onClick={toggle}
-              className="navlink rounded-full border border-border bg-surface px-3 py-1.5 text-[13px] font-bold text-muted hover:border-electric/40 hover:text-ink"
+              className="navlink rounded-full border border-white/35 px-3 py-1.5 text-[13px] font-bold text-white hover:bg-white/15"
               aria-label="Toggle language"
             >
               {ar ? "EN" : "ع"}
@@ -81,15 +84,17 @@ export function Shell() {
               <Link
                 to="/profile"
                 aria-label={ar ? "الملف" : "Profile"}
-                className={`navlink flex h-9 w-9 items-center justify-center rounded-full text-[14px] font-black text-white ${
-                  onProfile ? "ring-2 ring-electric ring-offset-2 ring-offset-bg" : ""
+                className={`navlink flex h-9 w-9 items-center justify-center rounded-full bg-white text-[14px] font-black text-electric ${
+                  onProfile ? "ring-2 ring-white ring-offset-2 ring-offset-electric-bright" : ""
                 }`}
-                style={{ background: "linear-gradient(180deg, #3b76f6, #2563eb)" }}
               >
                 {(user.displayName?.[0] ?? user.phoneNumber?.slice(-2) ?? "M").toUpperCase()}
               </Link>
             ) : (
-              <Link to="/signin" className="btn btn-primary !px-4 !py-2 !text-[13.5px]">
+              <Link
+                to="/signin"
+                className="btn !bg-white !px-4 !py-2 !text-[13.5px] !text-electric hover:!bg-white/90"
+              >
                 {ar ? "تسجيل الدخول" : "Sign in"}
               </Link>
             )}

@@ -7,6 +7,7 @@ import BookingsPage from "./pages/BookingsPage";
 import ChatPage from "./pages/ChatPage";
 import SignInPage from "./pages/SignInPage";
 import ProfilePage from "./pages/ProfilePage";
+import OwnerLayout from "./components/owner/OwnerLayout";
 import OwnerDashboardPage from "./pages/owner/OwnerDashboardPage";
 import OwnerPitchesPage from "./pages/owner/OwnerPitchesPage";
 import OwnerBookingsPage from "./pages/owner/OwnerBookingsPage";
@@ -32,9 +33,11 @@ export default function App() {
         <Route path="/ai" element={<ChatPage />} />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/owner" element={<OwnerDashboardPage />} />
-        <Route path="/owner/pitches" element={<OwnerPitchesPage />} />
-        <Route path="/owner/bookings" element={<OwnerBookingsPage />} />
+        <Route path="/owner" element={<OwnerLayout />}>
+          <Route index element={<OwnerDashboardPage />} />
+          <Route path="bookings" element={<OwnerBookingsPage />} />
+          <Route path="pitches" element={<OwnerPitchesPage />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

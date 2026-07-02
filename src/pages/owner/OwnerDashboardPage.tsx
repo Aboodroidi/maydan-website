@@ -1,8 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
-  Bar,
-  BarChart,
   CartesianGrid,
   Line,
   LineChart,
@@ -11,15 +9,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { firebaseReady } from "../../lib/firebase";
 import { useAuth } from "../../lib/auth";
 import { useLang } from "../../lib/i18n";
 import { omr } from "../../lib/data";
 import { setBookingStatus, useOwnedPitches, useOwnerBookings } from "../../lib/owner";
 import type { Booking } from "../../lib/types";
-import { SetupNotice } from "../../components/SetupNotice";
 
 const DAY_MS = 86_400_000;
+const PERIOD_DAYS = 30;
 
 function fmtDate(ms: number, ar: boolean): string {
   return new Intl.DateTimeFormat(ar ? "ar" : "en-GB", {
@@ -34,6 +31,17 @@ function fmtTime(ms: number, ar: boolean): string {
     hour: "numeric",
     minute: "2-digit",
   }).format(new Date(ms));
+}
+
+function fmtRange(startMs: number, endMs: number, ar: boolean): string {
+  const fmt = new Intl.DateTimeFormat(ar ? "ar" : "en-GB", { day: "numeric", month: "short" });
+  return `${fmt.format(new Date(startMs))} – ${fmt.format(new Date(endMs))}`;
+}
+
+/** Percentage change of `curr` vs `prev`; null when there is no baseline. */
+function pctDelta(curr: number, prev: number): number | null {
+  if (prev === 0) return curr === 0 ? 0 : null;
+  return Math.round(((curr - prev) / prev) * 100);
 }
 
 function StatusPill({ status, ar }: { status: string; ar: boolean }) {
@@ -62,6 +70,35 @@ function StatusPill({ status, ar }: { status: string; ar: boolean }) {
   );
 }
 
+/** A small up/down/flat delta chip: green up, red down, muted flat. */
+function Delta({ value, ar }: { value: number | null; ar: boolean }) {
+  if (value === null) {
+    return <span className="text-[12px] font-semibold text-muted">{ar ? "جديد" : "New"}</span>;
+  }
+  const up = value > 0;
+  const down = value < 0;
+  const tone = up ? "text-emerald-600" : down ? "text-red-600" : "text-muted";
+  const arrow = up ? "M12 5v14M5 12l7-7 7 7" : down ? "M12 19V5M5 12l7 7 7-7" : "M5 12h14";
+  return (
+    <span className={`inline-flex items-center gap-1 text-[12px] font-bold ${tone}`}>
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d={arrow} />
+      </svg>
+      <span dir="ltr">{`${up ? "+" : ""}${value}%`}</span>
+    </span>
+  );
+}
+
 const TOOLTIP_STYLE = {
   background: "#ffffff",
   border: "1px solid rgba(13,27,50,0.09)",
@@ -75,19 +112,33 @@ const TICK_FILL = "#5c6b84";
 
 export default function OwnerDashboardPage() {
   const { ar } = useLang();
-  const { user, loading: authLoading } = useAuth();
-  const { pitches, loading: pitchesLoading, error } = useOwnedPitches(user?.uid);
+  const { user } = useAuth();
+  const { pitches, error } = useOwnedPitches(user?.uid);
   const pitchIds = useMemo(() => pitches.map((p) => p.id), [pitches]);
   const bookings = useOwnerBookings(pitchIds);
 
-  const stats = useMemo(() => {
+  const venueName = useMemo(() => {
+    if (pitches.length === 1) return pitches[0].name;
+    return ar ? `${pitches.length} ملاعب` : `${pitches.length} pitches`;
+  }, [pitches, ar]);
+
+  // Current 30 days vs the prior 30 days, computed from real bookings.
+  const metrics = useMemo(() => {
     const now = Date.now();
-    const monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
-    const nextMonthStart = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).getTime();
-    const monthOnly = bookings.filter(
-      (b) => b.status !== "cancelled" && b.startMs >= monthStart && b.startMs < nextMonthStart
-    );
-    const upcoming = bookings.filter((b) => b.status === "confirmed" && b.endMs >= now);
+    const currStart = now - PERIOD_DAYS * DAY_MS;
+    const prevStart = now - 2 * PERIOD_DAYS * DAY_MS;
+
+    const live = bookings.filter((b) => b.status !== "cancelled");
+    const inRange = (b: Booking, lo: number, hi: number) => b.startMs >= lo && b.startMs < hi;
+    const curr = live.filter((b) => inRange(b, currStart, now));
+    const prev = live.filter((b) => inRange(b, prevStart, currStart));
+
+    const revenue = (list: Booking[]) => list.reduce((sum, b) => sum + b.amount, 0);
+    const upcomingNow = bookings.filter((b) => b.status === "confirmed" && b.endMs >= now).length;
+    const upcomingPrev = bookings.filter(
+      (b) => b.status === "confirmed" && b.endMs >= currStart && b.endMs < now
+    ).length;
+
     // Rough occupancy: booked upcoming slots over total upcoming slots.
     let totalSlots = 0;
     let bookedSlots = 0;
@@ -99,34 +150,66 @@ export default function OwnerDashboardPage() {
         }
       }
     }
+    const occupancy = totalSlots > 0 ? Math.round((bookedSlots / totalSlots) * 100) : 0;
+
     return {
-      bookingsThisMonth: monthOnly.length,
-      revenueThisMonth: monthOnly.reduce((sum, b) => sum + b.amount, 0),
-      upcomingCount: upcoming.length,
-      occupancy: totalSlots > 0 ? Math.round((bookedSlots / totalSlots) * 100) : 0,
+      bookings: { value: curr.length, delta: pctDelta(curr.length, prev.length) },
+      revenue: {
+        value: revenue(curr),
+        delta: pctDelta(revenue(curr), revenue(prev)),
+      },
+      upcoming: { value: upcomingNow, delta: pctDelta(upcomingNow, upcomingPrev) },
+      occupancy: { value: occupancy, delta: null as number | null },
+      currStart,
+      prevStart,
+      now,
     };
   }, [bookings, pitches]);
 
-  // Last 14 days: bookings per day + revenue per day (cancelled excluded).
-  const chartData = useMemo(() => {
+  // Daily revenue for the current period plus the aligned prior period, so the
+  // chart can draw two overlaid series (Shopify's "sales over time").
+  const chart = useMemo(() => {
     const fmt = new Intl.DateTimeFormat(ar ? "ar" : "en-GB", { day: "numeric", month: "short" });
-    const out: { day: string; bookings: number; revenue: number }[] = [];
-    for (let i = 13; i >= 0; i--) {
-      const d = new Date();
-      d.setHours(0, 0, 0, 0);
-      d.setDate(d.getDate() - i);
-      const start = d.getTime();
+    const live = bookings.filter((b) => b.status !== "cancelled");
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    const todayStart = dayStart.getTime();
+
+    const revenueOn = (start: number) => {
       const end = start + DAY_MS;
-      const dayBookings = bookings.filter(
-        (b) => b.status !== "cancelled" && b.startMs >= start && b.startMs < end
+      return (
+        Math.round(
+          live
+            .filter((b) => b.startMs >= start && b.startMs < end)
+            .reduce((sum, b) => sum + b.amount, 0) * 10
+        ) / 10
       );
-      out.push({
-        day: fmt.format(d),
-        bookings: dayBookings.length,
-        revenue: Math.round(dayBookings.reduce((sum, b) => sum + b.amount, 0) * 10) / 10,
+    };
+
+    const rows: { day: string; current: number; previous: number }[] = [];
+    for (let i = PERIOD_DAYS - 1; i >= 0; i--) {
+      const currDay = todayStart - i * DAY_MS;
+      const prevDay = currDay - PERIOD_DAYS * DAY_MS;
+      rows.push({
+        day: fmt.format(new Date(currDay)),
+        current: revenueOn(currDay),
+        previous: revenueOn(prevDay),
       });
     }
-    return out;
+
+    const currTotal = rows.reduce((s, r) => s + r.current, 0);
+    const prevTotal = rows.reduce((s, r) => s + r.previous, 0);
+    return {
+      rows,
+      currTotal: Math.round(currTotal * 10) / 10,
+      delta: pctDelta(currTotal, prevTotal),
+      currLabel: fmtRange(todayStart - (PERIOD_DAYS - 1) * DAY_MS, todayStart, ar),
+      prevLabel: fmtRange(
+        todayStart - (2 * PERIOD_DAYS - 1) * DAY_MS,
+        todayStart - PERIOD_DAYS * DAY_MS,
+        ar
+      ),
+    };
   }, [bookings, ar]);
 
   const recent = useMemo(
@@ -134,46 +217,19 @@ export default function OwnerDashboardPage() {
     [bookings]
   );
 
-  if (!firebaseReady) {
-    return (
-      <SetupNotice
-        title={ar ? "اربط قاعدة بيانات Firebase" : "Connect the Firebase database"}
-        body={
-          ar
-            ? "أضف مفاتيح VITE_FIREBASE_* إلى ملف البيئة ثم أعد التحميل لعرض لوحة المالك."
-            : "Add the VITE_FIREBASE_* keys to your env file and reload to see the owner dashboard."
-        }
-      />
+  // This-week insight numbers for the action cards.
+  const week = useMemo(() => {
+    const now = Date.now();
+    const weekStart = now - 7 * DAY_MS;
+    const live = bookings.filter(
+      (b) => b.status !== "cancelled" && b.startMs >= weekStart && b.startMs <= now
     );
-  }
-
-  if (authLoading) {
-    return <p className="p-8 text-sm text-muted">{ar ? "جارٍ التحميل…" : "Loading…"}</p>;
-  }
-
-  if (!user) {
-    return (
-      <div className="grid h-full place-items-center p-8">
-        <div className="card max-w-md p-7 text-center fade-up">
-          <h1 className="text-lg font-bold">
-            {ar ? "سجل الدخول لإدارة ملاعبك" : "Sign in to manage your pitches"}
-          </h1>
-          <p className="mt-3 text-sm text-muted">
-            {ar
-              ? "أدوات المالك تتطلب حساباً مسجلاً. سجل الدخول بنفس حساب التطبيق."
-              : "Owner tools need a signed in account. Use the same account as the iOS app."}
-          </p>
-          <Link to="/signin" className="btn btn-primary mt-5">
-            {ar ? "تسجيل الدخول" : "Sign in"}
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (pitchesLoading) {
-    return <p className="p-8 text-sm text-muted">{ar ? "جارٍ التحميل…" : "Loading…"}</p>;
-  }
+    return {
+      count: live.length,
+      revenue: live.reduce((sum, b) => sum + b.amount, 0),
+      confirmed: bookings.filter((b) => b.status === "confirmed" && b.endMs >= now).length,
+    };
+  }, [bookings]);
 
   if (pitches.length === 0) {
     return (
@@ -191,168 +247,169 @@ export default function OwnerDashboardPage() {
     );
   }
 
-  const iconProps = {
-    width: 20,
-    height: 20,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-  } as const;
-
-  const statCards = [
+  const kpis = [
     {
-      label: ar ? "حجوزات هذا الشهر" : "Bookings this month",
-      value: String(stats.bookingsThisMonth),
-      icon: (
-        <svg {...iconProps} aria-hidden="true">
-          <rect x="3" y="4" width="18" height="17" rx="3" />
-          <path d="M16 2v4M8 2v4M3 9h18" />
-        </svg>
-      ),
+      label: ar ? "الحجوزات" : "Bookings",
+      value: String(metrics.bookings.value),
+      delta: metrics.bookings.delta,
     },
     {
-      label: ar ? "إيرادات هذا الشهر" : "Revenue this month",
-      value: omr(stats.revenueThisMonth),
-      icon: (
-        <svg {...iconProps} aria-hidden="true">
-          <rect x="2" y="6" width="20" height="12" rx="3" />
-          <circle cx="12" cy="12" r="2.5" />
-        </svg>
-      ),
+      label: ar ? "الإيرادات" : "Revenue",
+      value: omr(metrics.revenue.value),
+      delta: metrics.revenue.delta,
     },
     {
-      label: ar ? "الحجوزات القادمة" : "Upcoming",
-      value: String(stats.upcomingCount),
-      icon: (
-        <svg {...iconProps} aria-hidden="true">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 7v5l3 2" />
-        </svg>
-      ),
+      label: ar ? "القادمة" : "Upcoming",
+      value: String(metrics.upcoming.value),
+      delta: metrics.upcoming.delta,
     },
     {
       label: ar ? "الإشغال" : "Occupancy",
-      value: `${stats.occupancy}%`,
-      icon: (
-        <svg {...iconProps} aria-hidden="true">
-          <path d="M19 5L5 19" />
-          <circle cx="6.5" cy="6.5" r="2.5" />
-          <circle cx="17.5" cy="17.5" r="2.5" />
-        </svg>
-      ),
+      value: `${metrics.occupancy.value}%`,
+      delta: metrics.occupancy.delta,
     },
   ];
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] space-y-6 px-4 py-6 sm:px-6 fade-up">
-      <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
-          {ar ? "لوحة المالك" : "Owner dashboard"}
-        </h1>
-        <p className="text-sm text-muted">
-          {ar ? `عبر ${pitches.length} ملاعب` : `Across ${pitches.length} pitches`}
-        </p>
+    <div className="mx-auto w-full max-w-[1200px] space-y-6 px-4 py-6 sm:px-6 fade-up">
+      {/* Title row */}
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
+            {ar ? "لوحة التحكم" : "Dashboard"}
+          </h1>
+          <p className="mt-1 text-sm text-muted">{venueName}</p>
+        </div>
+        <span className="chip !cursor-default" data-active="true">
+          {ar ? "آخر 30 يوماً" : "Last 30 days"}
+        </span>
       </header>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        {statCards.map((s) => (
-          <div key={s.label} className="card p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-[13px] font-semibold text-muted">{s.label}</p>
-                <p className="mt-1 truncate text-2xl font-black tracking-tight">{s.value}</p>
-              </div>
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-electric/10 text-electric">
-                {s.icon}
-              </span>
+      {/* Metrics bar: one card, four KPI cells with real deltas */}
+      <div className="card grid grid-cols-2 divide-border p-0 sm:grid-cols-4 sm:divide-x sm:[&>*:not(:first-child)]:border-s">
+        {kpis.map((k, i) => (
+          <div
+            key={k.label}
+            className={`p-5 ${i < 2 ? "border-b border-border sm:border-b-0" : ""} ${
+              i % 2 === 1 ? "border-s border-border sm:border-s-0" : ""
+            }`}
+          >
+            <p className="text-[13px] font-semibold text-muted">{k.label}</p>
+            <p className="mt-1 truncate text-2xl font-black tracking-tight">{k.value}</p>
+            <div className="mt-1.5">
+              <Delta value={k.delta} ar={ar} />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Charts */}
-      <div className="grid gap-4 xl:grid-cols-2">
-        <div className="card p-5">
-          <h2 className="text-sm font-bold text-muted">
-            {ar ? "الحجوزات اليومية، آخر 14 يوماً" : "Bookings per day, last 14 days"}
-          </h2>
-          <div dir="ltr" className="mt-4 h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
-                <CartesianGrid stroke={GRID_STROKE} vertical={false} />
-                <XAxis
-                  dataKey="day"
-                  tick={{ fill: TICK_FILL, fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  interval="preserveStartEnd"
-                />
-                <YAxis
-                  allowDecimals={false}
-                  tick={{ fill: TICK_FILL, fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
-                  labelStyle={{ color: "#5c6b84", fontWeight: 600 }}
-                  itemStyle={{ color: "#0d1b32" }}
-                  cursor={{ fill: "rgba(37,99,235,0.08)" }}
-                />
-                <Bar
-                  dataKey="bookings"
-                  name={ar ? "الحجوزات" : "Bookings"}
-                  fill="#2563eb"
-                  radius={[6, 6, 0, 0]}
-                  maxBarSize={26}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+      {/* Revenue over time: two series, current (solid) vs previous (dashed) */}
+      <section className="card p-5 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-bold text-muted">
+              {ar ? "الإيرادات عبر الوقت" : "Revenue over time"}
+            </h2>
+            <div className="mt-1 flex items-baseline gap-2.5">
+              <p className="text-2xl font-black tracking-tight sm:text-3xl">
+                {omr(chart.currTotal)}
+              </p>
+              <Delta value={chart.delta} ar={ar} />
+            </div>
+          </div>
+          {/* Legend: current vs previous date ranges */}
+          <div className="flex flex-col gap-1.5 text-[12px] font-semibold text-muted">
+            <span className="inline-flex items-center gap-2">
+              <span className="h-0.5 w-5 rounded-full bg-electric" />
+              <span dir="ltr">{chart.currLabel}</span>
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <span className="h-0 w-5 rounded-full border-t-2 border-dashed border-[#93b4fb]" />
+              <span dir="ltr">{chart.prevLabel}</span>
+            </span>
           </div>
         </div>
 
-        <div className="card p-5">
-          <h2 className="text-sm font-bold text-muted">
-            {ar ? "الإيرادات، آخر 14 يوماً (ر.ع)" : "Revenue, last 14 days (OMR)"}
-          </h2>
-          <div dir="ltr" className="mt-4 h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
-                <CartesianGrid stroke={GRID_STROKE} vertical={false} />
-                <XAxis
-                  dataKey="day"
-                  tick={{ fill: TICK_FILL, fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  interval="preserveStartEnd"
-                />
-                <YAxis
-                  tick={{ fill: TICK_FILL, fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
-                  labelStyle={{ color: "#5c6b84", fontWeight: 600 }}
-                  itemStyle={{ color: "#0d1b32" }}
-                  cursor={{ stroke: "rgba(37,99,235,0.25)" }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="revenue"
-                  name={ar ? "الإيرادات" : "Revenue"}
-                  stroke="#2563eb"
-                  strokeWidth={2.5}
-                  dot={false}
-                  activeDot={{ r: 4, fill: "#2563eb", stroke: "#ffffff", strokeWidth: 2 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+        <div dir="ltr" className="mt-5 h-64 sm:h-72">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chart.rows} margin={{ top: 4, right: 6, left: -18, bottom: 0 }}>
+              <CartesianGrid stroke={GRID_STROKE} vertical={false} />
+              <XAxis
+                dataKey="day"
+                tick={{ fill: TICK_FILL, fontSize: 11 }}
+                axisLine={false}
+                tickLine={false}
+                interval="preserveStartEnd"
+                minTickGap={28}
+              />
+              <YAxis
+                tick={{ fill: TICK_FILL, fontSize: 11 }}
+                axisLine={false}
+                tickLine={false}
+                width={44}
+              />
+              <Tooltip
+                contentStyle={TOOLTIP_STYLE}
+                labelStyle={{ color: "#5c6b84", fontWeight: 600 }}
+                itemStyle={{ color: "#0d1b32" }}
+                cursor={{ stroke: "rgba(37,99,235,0.25)" }}
+              />
+              <Line
+                type="monotone"
+                dataKey="previous"
+                name={ar ? "الفترة السابقة" : "Previous period"}
+                stroke="#93b4fb"
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                dot={false}
+                activeDot={{ r: 3, fill: "#93b4fb", stroke: "#ffffff", strokeWidth: 2 }}
+              />
+              <Line
+                type="monotone"
+                dataKey="current"
+                name={ar ? "الفترة الحالية" : "Current period"}
+                stroke="#2563eb"
+                strokeWidth={2.5}
+                dot={false}
+                activeDot={{ r: 4, fill: "#2563eb", stroke: "#ffffff", strokeWidth: 2 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </section>
+
+      {/* Insight / action cards */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="card card-hover flex flex-col p-5">
+          <h3 className="text-base font-black tracking-tight">
+            {ar ? "أداء هذا الأسبوع" : "This week at a glance"}
+          </h3>
+          <p className="mt-2 flex-1 text-sm text-muted">
+            {ar
+              ? `${week.count} حجوزات هذا الأسبوع، ${omr(week.revenue)} من الإيرادات.`
+              : `${week.count} bookings this week, ${omr(week.revenue)} earned.`}
+          </p>
+          <Link to="/owner/bookings" className="btn btn-primary mt-4 self-start !px-4 !py-2 !text-[13px]">
+            {ar ? "عرض الحجوزات" : "View bookings"}
+          </Link>
+        </div>
+
+        <div className="card card-hover flex flex-col p-5">
+          <h3 className="text-base font-black tracking-tight">
+            {ar ? "الحجوزات القادمة" : "Coming up"}
+          </h3>
+          <p className="mt-2 flex-1 text-sm text-muted">
+            {week.confirmed > 0
+              ? ar
+                ? `لديك ${week.confirmed} حجوزات مؤكدة قادمة. راجع الأسعار والإتاحة لتبقى ممتلئاً.`
+                : `You have ${week.confirmed} confirmed bookings coming up. Review pricing and availability to stay full.`
+              : ar
+                ? "لا توجد حجوزات مؤكدة قادمة. حدث الأسعار والإتاحة لجذب المزيد."
+                : "No confirmed bookings coming up. Update pricing and availability to attract more."}
+          </p>
+          <Link to="/owner/pitches" className="btn btn-ghost mt-4 self-start !px-4 !py-2 !text-[13px]">
+            {ar ? "إدارة الملاعب" : "Manage pitches"}
+          </Link>
         </div>
       </div>
 
