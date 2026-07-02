@@ -4,6 +4,7 @@ import { useAuth } from "../lib/auth";
 
 const ICONS = {
   // simple line icons (24x24 paths)
+  home: "M3 10.5L12 3l9 7.5M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5",
   discover: "M12 2C7.6 2 4 5.6 4 10c0 5.2 8 12 8 12s8-6.8 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z",
   bookings: "M7 2v3M17 2v3M3 8h18M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z",
   ai: "M3 6a1 1 0 011-1h16a1 1 0 011 1v10a1 1 0 01-1 1H7l-4 4V6zM8 9.5h8M8 12.5h5",
@@ -13,7 +14,8 @@ const ICONS = {
 type Item = { to: string; icon: keyof typeof ICONS; en: string; ar: string; end?: boolean };
 
 const ITEMS: Item[] = [
-  { to: "/", icon: "discover", en: "Discover", ar: "اكتشف", end: true },
+  { to: "/", icon: "home", en: "Home", ar: "الرئيسية", end: true },
+  { to: "/discover", icon: "discover", en: "Discover", ar: "اكتشف" },
   { to: "/bookings", icon: "bookings", en: "Bookings", ar: "الحجوزات" },
   { to: "/ai", icon: "ai", en: "Maydan AI", ar: "ميدان AI" },
   { to: "/owner", icon: "owner", en: "Owner", ar: "لوحة المالك" },
@@ -30,7 +32,7 @@ export function Shell() {
       <header className="glass-top z-20">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex shrink-0 items-center" aria-label="Maydan home">
-            <img src="/assets/img/wordmark_electric_blue.svg" alt="Maydan" className="hidden h-7 w-auto sm:block" />
+            <img src="/assets/img/wordmark_electric_blue.svg" alt="Maydan" className="hidden h-9 w-auto sm:block" />
             <img src="/assets/img/logo_electric_blue.svg" alt="Maydan" className="h-8 w-8 sm:hidden" />
           </Link>
 
@@ -61,7 +63,7 @@ export function Shell() {
                 >
                   <path d={ICONS[it.icon]} />
                 </svg>
-                <span className="hidden md:inline">{ar ? it.ar : it.en}</span>
+                <span className="hidden lg:inline">{ar ? it.ar : it.en}</span>
               </NavLink>
             ))}
           </nav>

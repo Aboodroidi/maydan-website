@@ -385,7 +385,7 @@ export default function BookingsPage() {
           ) : upcoming.length === 0 ? (
             <div className="card p-6 text-center">
               <p className="text-sm text-muted">{ar ? T.emptyUpcoming.ar : T.emptyUpcoming.en}</p>
-              <Link to="/" className="btn btn-ghost mt-4">
+              <Link to="/discover" className="btn btn-ghost mt-4">
                 {ar ? T.discover.ar : T.discover.en}
               </Link>
             </div>

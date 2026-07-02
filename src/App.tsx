@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Shell } from "./components/Shell";
+import HomePage from "./pages/HomePage";
 import DiscoverPage from "./pages/DiscoverPage";
 import PitchPage from "./pages/PitchPage";
 import BookingsPage from "./pages/BookingsPage";
@@ -24,7 +25,8 @@ export default function App() {
 
       {/* Everything else lives inside the sidebar shell. */}
       <Route element={<Shell />}>
-        <Route path="/" element={<DiscoverPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/discover" element={<DiscoverPage />} />
         <Route path="/pitch/:id" element={<PitchPage />} />
         <Route path="/bookings" element={<BookingsPage />} />
         <Route path="/ai" element={<ChatPage />} />

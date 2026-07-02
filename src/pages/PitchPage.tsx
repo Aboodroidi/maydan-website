@@ -163,7 +163,7 @@ export default function PitchPage() {
             {ar ? "ربما تمت إزالة هذا الملعب." : "This pitch may have been removed."}
           </p>
           <div className="mt-5">
-            <Link to="/" className="btn btn-ghost">
+            <Link to="/discover" className="btn btn-ghost">
               {ar ? "الرجوع إلى اكتشف" : "Back to Discover"}
             </Link>
           </div>
@@ -188,7 +188,7 @@ export default function PitchPage() {
   return (
     <div className="mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
       <Link
-        to="/"
+        to="/discover"
         className="mb-4 inline-block text-sm font-semibold text-muted hover:text-electric"
       >
         {ar ? "الرجوع إلى اكتشف" : "Back to Discover"}
