@@ -1,0 +1,20 @@
+# Apache SPA fallback for Plesk.
+# Real files and directories are served as-is. Universal Links
+# (/.well-known/*), the /join deep-link bridge and /assets/* are never
+# rewritten. Everything else falls back to the SPA entry point.
+
+RewriteEngine On
+RewriteBase /
+
+# Never rewrite these paths.
+RewriteRule ^\.well-known/ - [L]
+RewriteRule ^join(/|$) - [L]
+RewriteRule ^assets/ - [L]
+
+# Existing files and directories are served directly.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Everything else is a client-side route.
+RewriteRule ^ /index.html [L]
