@@ -196,9 +196,9 @@ export default function SignInPage() {
   const prettyPhone = `+968 ${local.slice(0, 4)} ${local.slice(4)}`;
 
   return (
-    <div className="grid min-h-full place-items-center p-6">
-      <div className="card fade-up w-full max-w-md p-8">
-        <img src="/assets/img/wordmark_white.svg" alt="Maydan" className="mx-auto mb-2 h-8 w-auto" />
+    <div className="mx-auto grid min-h-full w-full max-w-[1400px] place-items-center px-4 py-10 sm:px-6">
+      <div className="card fade-up w-full max-w-md p-8 sm:p-10">
+        <img src="/assets/img/wordmark_electric_blue.svg" alt="Maydan" className="mx-auto mb-2 h-8 w-auto" />
         <p className="mb-7 text-center text-sm text-muted">
           {ar ? "سجل الدخول للحجز ومتابعة مبارياتك." : "Sign in to book pitches and follow your matches."}
         </p>
@@ -215,7 +215,7 @@ export default function SignInPage() {
             </label>
             <div
               dir="ltr"
-              className="flex items-center gap-2 rounded-xl border border-border bg-bg-soft px-4 py-3 focus-within:border-electric"
+              className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 focus-within:border-electric focus-within:ring-4 focus-within:ring-electric/15"
             >
               <span className="text-[15px] font-bold text-muted">+968</span>
               <input
@@ -230,7 +230,7 @@ export default function SignInPage() {
               />
             </div>
 
-            {error && <p className="mt-3 text-sm font-semibold text-red-400">{error}</p>}
+            {error && <p className="mt-3 text-sm font-semibold text-red-600">{error}</p>}
 
             <div className="mt-5">
               <div ref={recaptchaHostRef} />
@@ -265,12 +265,12 @@ export default function SignInPage() {
                   onPaste={onCodePaste}
                   disabled={busy}
                   aria-label={`Digit ${i + 1}`}
-                  className="h-13 w-11 rounded-xl border border-border bg-bg-soft text-center text-lg font-bold text-ink outline-none focus:border-electric disabled:opacity-50"
+                  className="h-13 w-11 rounded-xl border border-border bg-surface text-center text-lg font-bold text-ink outline-none focus:border-electric focus:ring-4 focus:ring-electric/15 disabled:opacity-50"
                 />
               ))}
             </div>
 
-            {error && <p className="mt-3 text-center text-sm font-semibold text-red-400">{error}</p>}
+            {error && <p className="mt-3 text-center text-sm font-semibold text-red-600">{error}</p>}
 
             <button
               type="button"

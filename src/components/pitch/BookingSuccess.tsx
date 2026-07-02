@@ -8,7 +8,7 @@ export function BookingSuccess({ bookingId }: { bookingId: string }) {
 
   return (
     <div className="card fade-up p-7 text-center">
-      <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-electric/15">
+      <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-electric/10">
         <svg
           width="24"
           height="24"
@@ -18,12 +18,14 @@ export function BookingSuccess({ bookingId }: { bookingId: string }) {
           strokeWidth="2.2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-electric-bright"
+          className="text-electric"
         >
           <path d="M20 6L9 17l-5-5" />
         </svg>
       </div>
-      <h2 className="text-xl font-black">{ar ? "تم تأكيد الحجز" : "Booking confirmed"}</h2>
+      <h2 className="text-xl font-black tracking-tight">
+        {ar ? "تم تأكيد الحجز" : "Booking confirmed"}
+      </h2>
       <p className="mt-2 text-sm text-muted">
         {ar
           ? "شارك هذا الرمز مع فريقك حتى ينضموا إلى حجزك."

@@ -1,5 +1,6 @@
-import { NavLink, Outlet, Link } from "react-router-dom";
+import { NavLink, Outlet, Link, useLocation } from "react-router-dom";
 import { useLang } from "../lib/i18n";
+import { useAuth } from "../lib/auth";
 
 const ICONS = {
   // simple line icons (24x24 paths)
@@ -7,7 +8,6 @@ const ICONS = {
   bookings: "M7 2v3M17 2v3M3 8h18M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z",
   ai: "M3 6a1 1 0 011-1h16a1 1 0 011 1v10a1 1 0 01-1 1H7l-4 4V6zM8 9.5h8M8 12.5h5",
   owner: "M4 20V10M10 20V4M16 20v-8M22 20H2",
-  profile: "M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0",
 } as const;
 
 type Item = { to: string; icon: keyof typeof ICONS; en: string; ar: string; end?: boolean };
@@ -17,63 +17,83 @@ const ITEMS: Item[] = [
   { to: "/bookings", icon: "bookings", en: "Bookings", ar: "الحجوزات" },
   { to: "/ai", icon: "ai", en: "Maydan AI", ar: "ميدان AI" },
   { to: "/owner", icon: "owner", en: "Owner", ar: "لوحة المالك" },
-  { to: "/profile", icon: "profile", en: "Profile", ar: "الملف" },
 ];
 
 export function Shell() {
   const { ar, toggle } = useLang();
+  const { user } = useAuth();
+  const location = useLocation();
+  const onProfile = location.pathname.startsWith("/profile");
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden">
-      <aside className="flex w-[76px] shrink-0 flex-col items-center border-e border-border bg-bg-soft py-5 lg:w-60 lg:items-stretch lg:px-4">
-        <Link to="/" className="mb-8 flex items-center justify-center lg:justify-start lg:px-2">
-          <img src="/assets/img/logo_electric_blue.svg" alt="Maydan" className="h-8 w-8 lg:hidden" />
-          <img src="/assets/img/wordmark_white.svg" alt="Maydan" className="hidden h-7 w-auto lg:block" />
-        </Link>
+    <div className="flex h-[100dvh] flex-col overflow-hidden">
+      <header className="glass-top z-20">
+        <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-3 px-4 sm:px-6">
+          <Link to="/" className="flex shrink-0 items-center" aria-label="Maydan home">
+            <img src="/assets/img/wordmark_electric_blue.svg" alt="Maydan" className="hidden h-7 w-auto sm:block" />
+            <img src="/assets/img/logo_electric_blue.svg" alt="Maydan" className="h-8 w-8 sm:hidden" />
+          </Link>
 
-        <nav className="flex flex-1 flex-col gap-1">
-          {ITEMS.map((it) => (
-            <NavLink
-              key={it.to}
-              to={it.to}
-              end={it.end}
-              className={({ isActive }) =>
-                `navlink flex items-center gap-3 rounded-xl px-3 py-3 text-[15px] font-semibold ${
-                  isActive ? "bg-surface text-ink" : "text-muted hover:bg-surface/60 hover:text-ink"
-                }`
-              }
+          {/* Primary nav: pills on desktop, icon row on mobile */}
+          <nav className="mx-auto flex items-center gap-1 overflow-x-auto rounded-full sm:gap-1.5">
+            {ITEMS.map((it) => (
+              <NavLink
+                key={it.to}
+                to={it.to}
+                end={it.end}
+                className={({ isActive }) =>
+                  `navlink flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-[14.5px] font-bold sm:px-4 ${
+                    isActive
+                      ? "bg-electric/10 text-electric"
+                      : "text-muted hover:bg-surface-2 hover:text-ink"
+                  }`
+                }
+              >
+                <svg
+                  width="19"
+                  height="19"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.9"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d={ICONS[it.icon]} />
+                </svg>
+                <span className="hidden md:inline">{ar ? it.ar : it.en}</span>
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              onClick={toggle}
+              className="navlink rounded-full border border-border bg-surface px-3 py-1.5 text-[13px] font-bold text-muted hover:border-electric/40 hover:text-ink"
+              aria-label="Toggle language"
             >
-              {({ isActive }) => (
-                <>
-                  <svg
-                    width="22"
-                    height="22"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={isActive ? "text-electric-bright" : ""}
-                  >
-                    <path d={ICONS[it.icon]} />
-                  </svg>
-                  <span className="hidden lg:inline">{ar ? it.ar : it.en}</span>
-                </>
-              )}
-            </NavLink>
-          ))}
-        </nav>
+              {ar ? "EN" : "ع"}
+            </button>
 
-        <button
-          onClick={toggle}
-          className="mt-4 rounded-xl border border-border px-3 py-2.5 text-sm font-bold text-muted hover:text-ink"
-          aria-label="Toggle language"
-        >
-          <span className="lg:hidden">{ar ? "EN" : "ع"}</span>
-          <span className="hidden lg:inline">{ar ? "English" : "العربية"}</span>
-        </button>
-      </aside>
+            {user ? (
+              <Link
+                to="/profile"
+                aria-label={ar ? "الملف" : "Profile"}
+                className={`navlink flex h-9 w-9 items-center justify-center rounded-full text-[14px] font-black text-white ${
+                  onProfile ? "ring-2 ring-electric ring-offset-2 ring-offset-bg" : ""
+                }`}
+                style={{ background: "linear-gradient(180deg, #3b76f6, #2563eb)" }}
+              >
+                {(user.displayName?.[0] ?? user.phoneNumber?.slice(-2) ?? "M").toUpperCase()}
+              </Link>
+            ) : (
+              <Link to="/signin" className="btn btn-primary !px-4 !py-2 !text-[13.5px]">
+                {ar ? "تسجيل الدخول" : "Sign in"}
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
 
       <main className="min-w-0 flex-1 overflow-y-auto scroll-thin">
         <Outlet />

@@ -14,22 +14,22 @@ export default function SupportPage() {
 
   return (
     <div className="min-h-dvh">
-      <header className="border-b border-border bg-bg-soft px-6 py-4">
+      <header className="glass-top sticky top-0 z-20 px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <Link to="/" aria-label="Maydan home">
-            <img src="/assets/img/wordmark_white.svg" alt="Maydan" className="h-6 w-auto" />
+            <img src="/assets/img/wordmark_electric_blue.svg" alt="Maydan" className="h-6 w-auto" />
           </Link>
-          <Link to="/" className="text-[14px] font-semibold text-electric-bright hover:text-ink">
+          <Link to="/" className="text-[14px] font-semibold text-electric hover:text-electric-bright">
             {ar ? "العودة للرئيسية" : "Back to home"}
           </Link>
         </div>
       </header>
 
-      <main className="px-6 py-12">
-        <div className="mx-auto max-w-3xl fade-up">
-          <h1 className="text-[clamp(28px,5vw,40px)] font-extrabold tracking-[-0.02em]">Support</h1>
+      <main className="px-4 py-10 sm:px-6 sm:py-14">
+        <div className="card fade-up mx-auto max-w-3xl p-6 sm:p-10">
+          <h1 className="text-[clamp(28px,5vw,40px)] font-black tracking-tight">Support</h1>
 
-          <div className="legal-prose mt-6">
+          <div className="legal-prose mt-8">
             <p>
               Need a hand? We&apos;re here to help. Email us any time at{" "}
               <a href="mailto:support@maydan.om">support@maydan.om</a> and we&apos;ll usually reply within 1 to 2 days.

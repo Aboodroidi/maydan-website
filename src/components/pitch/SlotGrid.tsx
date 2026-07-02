@@ -24,8 +24,8 @@ export function SlotGrid({
             onClick={() => onSelect(s.id)}
             className={`rounded-xl border py-3 text-sm font-bold ${
               active
-                ? "border-electric-bright/50 bg-electric/15 text-electric-bright"
-                : "border-border bg-surface text-ink hover:bg-surface-2"
+                ? "border-electric/45 bg-electric/10 text-electric"
+                : "border-border bg-surface text-ink hover:border-electric/30 hover:bg-surface-2"
             }`}
           >
             {timeLabel(s.startMs, ar)}

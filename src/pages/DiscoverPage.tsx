@@ -114,7 +114,7 @@ export default function DiscoverPage() {
 
   if (!firebaseReady) {
     return (
-      <div className="h-full">
+      <div className="mx-auto h-full w-full max-w-[1400px] px-4 py-6 sm:px-6">
         <SetupNotice
           title={ar ? "اربط قاعدة بيانات Firebase" : "Connect the Firebase database"}
           body={
@@ -128,12 +128,12 @@ export default function DiscoverPage() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="mx-auto flex h-full w-full max-w-[1400px] flex-col px-4 py-6 sm:px-6">
       {/* Toolbar: title, count, search and filter chips. */}
-      <header className="border-b border-border px-4 py-4 sm:px-6">
+      <header className="shrink-0">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-xl font-extrabold">{ar ? "اكتشف" : "Discover"}</h1>
-          <span className="text-sm text-muted">
+          <h1 className="text-2xl font-black tracking-tight">{ar ? "اكتشف" : "Discover"}</h1>
+          <span className="text-sm font-semibold text-muted">
             {loading
               ? ar
                 ? "جار التحميل..."
@@ -141,12 +141,12 @@ export default function DiscoverPage() {
               : `${filtered.length} ${ar ? "ملعب" : filtered.length === 1 ? "pitch" : "pitches"}`}
           </span>
         </div>
-        <div className="mt-3 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+        <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={ar ? "ابحث عن ملعب أو منطقة" : "Search a pitch or area"}
-            className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none placeholder:text-muted focus:border-electric-bright sm:max-w-xs"
+            className="w-full rounded-full border border-border bg-surface px-4 py-2.5 text-sm outline-none placeholder:text-muted focus:border-electric/50 focus:ring-4 focus:ring-electric/10 sm:max-w-xs"
           />
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scroll-thin sm:pb-0">
             {FILTERS.map((f) => (
@@ -175,28 +175,28 @@ export default function DiscoverPage() {
       </header>
 
       {/* Body: list pane + map pane. Stacks on small screens. */}
-      <div className="min-h-0 flex-1 overflow-y-auto scroll-thin lg:grid lg:grid-cols-[400px_minmax(0,1fr)] lg:overflow-hidden">
-        <section className="scroll-thin lg:min-h-0 lg:overflow-y-auto lg:border-e lg:border-border">
+      <div className="mt-5 min-h-0 flex-1 overflow-y-auto scroll-thin lg:grid lg:grid-cols-[400px_minmax(0,1fr)] lg:gap-5 lg:overflow-hidden">
+        <section className="scroll-thin lg:min-h-0 lg:overflow-y-auto lg:pe-1.5">
           {error ? (
-            <div className="card m-4 p-5 text-center">
-              <p className="text-sm text-red-400">{error}</p>
+            <div className="card p-5 text-center">
+              <p className="text-sm text-red-600">{error}</p>
               <button className="btn btn-ghost mt-4" onClick={() => setReloadKey((k) => k + 1)}>
                 {ar ? "أعد المحاولة" : "Try again"}
               </button>
             </div>
           ) : loading ? (
-            <div className="space-y-3 p-4">
+            <div className="space-y-3">
               <CardSkeleton />
               <CardSkeleton />
               <CardSkeleton />
               <CardSkeleton />
             </div>
           ) : filtered.length === 0 ? (
-            <p className="p-6 text-sm text-muted">
+            <p className="py-10 text-center text-sm text-muted">
               {ar ? "لا توجد ملاعب مطابقة." : "No pitches match."}
             </p>
           ) : (
-            <ul className="space-y-3 p-4">
+            <ul className="space-y-3 pb-1">
               {filtered.map((p) => (
                 <li
                   key={p.id}
@@ -218,7 +218,7 @@ export default function DiscoverPage() {
           )}
         </section>
 
-        <section className="relative h-[300px] shrink-0 border-t border-border lg:h-auto lg:border-t-0">
+        <section className="card relative mt-4 h-[300px] shrink-0 overflow-hidden lg:mt-0 lg:h-auto">
           {mapsReady ? (
             <DiscoverMap
               pitches={filtered}

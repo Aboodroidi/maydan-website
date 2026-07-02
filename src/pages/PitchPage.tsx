@@ -143,8 +143,10 @@ export default function PitchPage() {
     return (
       <div className="grid h-full place-items-center p-8">
         <div className="card max-w-md p-7 text-center">
-          <h1 className="text-lg font-bold">{ar ? "تعذر تحميل الملعب" : "Could not load pitch"}</h1>
-          <p className="mt-3 text-sm text-red-400">{loadError}</p>
+          <h1 className="text-lg font-black tracking-tight">
+            {ar ? "تعذر تحميل الملعب" : "Could not load pitch"}
+          </h1>
+          <p className="mt-3 text-sm text-red-600">{loadError}</p>
         </div>
       </div>
     );
@@ -154,7 +156,9 @@ export default function PitchPage() {
     return (
       <div className="grid h-full place-items-center p-8">
         <div className="card max-w-md p-7 text-center">
-          <h1 className="text-lg font-bold">{ar ? "الملعب غير موجود" : "Pitch not found"}</h1>
+          <h1 className="text-lg font-black tracking-tight">
+            {ar ? "الملعب غير موجود" : "Pitch not found"}
+          </h1>
           <p className="mt-3 text-sm text-muted">
             {ar ? "ربما تمت إزالة هذا الملعب." : "This pitch may have been removed."}
           </p>
@@ -185,7 +189,7 @@ export default function PitchPage() {
     <div className="mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
       <Link
         to="/"
-        className="mb-4 inline-block text-sm font-semibold text-muted hover:text-ink"
+        className="mb-4 inline-block text-sm font-semibold text-muted hover:text-electric"
       >
         {ar ? "الرجوع إلى اكتشف" : "Back to Discover"}
       </Link>
@@ -200,7 +204,9 @@ export default function PitchPage() {
             {showsAvailability(pitch.tier) ? (
               <>
                 <section className="card p-5 sm:p-6">
-                  <h2 className="text-lg font-bold">{ar ? "التوفر" : "Availability"}</h2>
+                  <h2 className="text-lg font-black tracking-tight">
+                    {ar ? "التوفر" : "Availability"}
+                  </h2>
                   <p className="mt-1 text-sm text-muted">
                     {ar ? "اختر اليوم ثم الوقت المناسب." : "Pick a day, then a time that works."}
                   </p>
@@ -240,7 +246,9 @@ export default function PitchPage() {
                 </section>
 
                 <section className="card p-5 sm:p-6">
-                  <h2 className="text-lg font-bold">{ar ? "احجز ملعبك" : "Reserve a pitch"}</h2>
+                  <h2 className="text-lg font-black tracking-tight">
+                    {ar ? "احجز ملعبك" : "Reserve a pitch"}
+                  </h2>
                   <p className="mt-1 text-sm text-muted">
                     {ar
                       ? "هذا المجمع يضم عدة ملاعب. اختر واحدًا لمباراتك."
@@ -262,7 +270,7 @@ export default function PitchPage() {
                   strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="shrink-0 text-electric-bright"
+                  className="shrink-0 text-electric"
                 >
                   <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.3 1.9.6 2.9.7a2 2 0 011.7 2z" />
                 </svg>
@@ -275,12 +283,12 @@ export default function PitchPage() {
             )}
 
             {bookError && (
-              <p className="text-center text-sm font-semibold text-red-400">{bookError}</p>
+              <p className="text-center text-sm font-semibold text-red-600">{bookError}</p>
             )}
 
-            {/* Sticky booking bar: price + summary + the tier-appropriate CTA. */}
+            {/* Sticky booking bar: frosted white card with the tier-appropriate CTA. */}
             <div className="sticky bottom-4">
-              <div className="card flex items-center gap-3 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
+              <div className="flex items-center gap-3 rounded-2xl border border-border bg-white/85 p-4 shadow-[0_4px_10px_rgba(13,27,50,0.06),0_18px_44px_rgba(37,99,235,0.18)] backdrop-blur-xl">
                 <div className="min-w-0 flex-1">
                   <div className="text-lg font-black">{omr(price)}</div>
                   <div

@@ -34,7 +34,7 @@ export function DiscoverMap({
         defaultCenter={MUSCAT}
         defaultZoom={11.5}
         mapId={mapId || undefined}
-        colorScheme="DARK"
+        colorScheme="LIGHT"
         gestureHandling="greedy"
         disableDefaultUI
         zoomControl
@@ -52,10 +52,10 @@ export function DiscoverMap({
               onClick={() => onSelect(p.id)}
             >
               <div
-                className={`cursor-pointer rounded-full border px-2.5 py-1 text-[11px] font-bold shadow-lg transition-transform ${
+                className={`cursor-pointer rounded-full border px-2.5 py-1 text-[11px] font-bold transition-transform ${
                   active
-                    ? "scale-110 border-transparent bg-electric text-white"
-                    : "border-border bg-surface text-ink"
+                    ? "scale-110 border-transparent bg-electric text-white shadow-[0_4px_14px_rgba(37,99,235,0.45)]"
+                    : "border-electric/30 bg-white text-electric shadow-[0_2px_10px_rgba(13,27,50,0.14)]"
                 }`}
               >
                 {omr(p.pricePerHour)}

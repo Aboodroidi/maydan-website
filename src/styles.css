@@ -7,27 +7,31 @@
 @font-face { font-family: "Winco"; src: url("/assets/fonts/winco-black.otf") format("opentype"); font-weight: 800; font-display: swap; }
 @font-face { font-family: "Winco"; src: url("/assets/fonts/winco-ultra-black.otf") format("opentype"); font-weight: 900; font-display: swap; }
 
-/* ---- App theme (dark, clean, mirrors the Maydan iOS app) ---- */
+/* ---- Brand theme: light, airy, electric-blue-forward ---- */
 @theme {
-  --color-bg: #070b14;
-  --color-bg-soft: #0f1626;
-  --color-surface: #131c2e;
-  --color-surface-2: #1a2439;
-  --color-ink: #f3f6fc;
-  --color-muted: #8a97ad;
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-bg: #f6f8fd;
+  --color-bg-soft: #eef2fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5fc;
+  --color-ink: #0d1b32;
+  --color-muted: #5c6b84;
+  --color-border: rgba(13, 27, 50, 0.09);
   --color-electric: #2563eb;
-  --color-electric-bright: #4f7bf7;
+  --color-electric-bright: #1d4ed8;
 
   --font-sans: "Winco", "Cairo", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-ar: "Cairo", "Winco", sans-serif;
 }
 
-:root { color-scheme: dark; }
+:root { color-scheme: light; }
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--color-bg);
+  background:
+    radial-gradient(900px 420px at 85% -120px, rgba(37, 99, 235, 0.10), transparent 65%),
+    radial-gradient(700px 380px at -10% 0%, rgba(37, 99, 235, 0.06), transparent 60%),
+    var(--color-bg);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.55;
@@ -42,28 +46,37 @@ a, button, .card, .pitch-row, .chip, .navlink {
     transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
 }
 
-/* Cards */
+/* Cards: white, rounded, soft blue-tinted elevation */
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 16px;
+  border-radius: 20px;
+  box-shadow: 0 1px 2px rgba(13, 27, 50, 0.04), 0 10px 30px rgba(37, 99, 235, 0.05);
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  transform: translateY(-3px);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: 0 4px 10px rgba(13, 27, 50, 0.05), 0 22px 48px rgba(37, 99, 235, 0.14);
 }
 
-/* Buttons */
+/* Buttons: pill-shaped, electric-first */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   border: none; cursor: pointer; font-family: inherit; font-weight: 700;
-  border-radius: 12px; padding: 12px 20px; font-size: 15px;
+  border-radius: 999px; padding: 12px 22px; font-size: 15px;
 }
-.btn-primary { background: var(--color-electric); color: #fff; }
-.btn-primary:hover { background: var(--color-electric-bright); }
+.btn-primary {
+  background: linear-gradient(180deg, #3b76f6, var(--color-electric));
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35), 0 10px 24px rgba(37, 99, 235, 0.22);
+}
+.btn-primary:hover {
+  background: linear-gradient(180deg, #2f6af0, var(--color-electric-bright));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.40), 0 16px 32px rgba(37, 99, 235, 0.26);
+}
 .btn-ghost { background: var(--color-surface); color: var(--color-ink); border: 1px solid var(--color-border); }
-.btn-ghost:hover { background: var(--color-surface-2); }
+.btn-ghost:hover { background: var(--color-surface-2); border-color: rgba(37, 99, 235, 0.30); }
 
 /* Chips */
 .chip {
@@ -71,17 +84,25 @@ a, button, .card, .pitch-row, .chip, .navlink {
   border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-muted);
   cursor: pointer; white-space: nowrap;
 }
-.chip:hover { color: var(--color-ink); }
+.chip:hover { color: var(--color-ink); border-color: rgba(37, 99, 235, 0.30); }
 .chip[data-active="true"] {
-  background: rgba(37, 99, 235, 0.16);
-  border-color: rgba(79, 139, 255, 0.5);
-  color: var(--color-electric-bright);
+  background: rgba(37, 99, 235, 0.10);
+  border-color: rgba(37, 99, 235, 0.45);
+  color: var(--color-electric);
+}
+
+/* Sticky top header: frosted white over the page */
+.glass-top {
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid var(--color-border);
 }
 
 /* Thin scrollbars for the list panes */
-.scroll-thin { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+.scroll-thin { scrollbar-width: thin; scrollbar-color: rgba(13, 27, 50, 0.22) transparent; }
 .scroll-thin::-webkit-scrollbar { width: 8px; }
-.scroll-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.16); border-radius: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: rgba(13, 27, 50, 0.18); border-radius: 8px; }
 
 /* Fade-in for content as it loads */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -95,11 +116,13 @@ a, button, .card, .pitch-row, .chip, .navlink {
 .legal-prose p { margin: 10px 0; }
 .legal-prose ul { margin: 10px 0; padding-inline-start: 22px; list-style: disc; }
 .legal-prose li { margin: 6px 0; }
-.legal-prose a { color: var(--color-electric-bright); font-weight: 600; }
+.legal-prose a { color: var(--color-electric); font-weight: 600; }
+.legal-prose a:hover { color: var(--color-electric-bright); }
 .legal-prose strong { color: var(--color-ink); font-weight: 700; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .card-hover:hover { transform: none; }
+  .btn-primary:hover { transform: none; }
   .fade-up { animation: none; }
 }

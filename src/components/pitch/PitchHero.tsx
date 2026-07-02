@@ -9,7 +9,7 @@ export function PitchHero({ pitch }: { pitch: Pitch }) {
 
   return (
     <section
-      className="relative overflow-hidden rounded-3xl border border-border"
+      className="relative overflow-hidden rounded-3xl border border-border shadow-[0_1px_2px_rgba(13,27,50,0.05),0_18px_44px_rgba(13,27,50,0.14)]"
       style={{ backgroundColor: accentColor(pitch.accentHex) }}
     >
       {pitch.imageURL ? (

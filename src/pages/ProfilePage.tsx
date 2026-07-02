@@ -91,7 +91,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-xl p-6 lg:p-10">
+      <div className="mx-auto max-w-xl px-4 py-8 sm:px-6 lg:py-10">
         <div className="card animate-pulse p-7">
           <div className="mx-auto h-16 w-16 rounded-full bg-surface-2" />
           <div className="mx-auto mt-4 h-4 w-40 rounded bg-surface-2" />
@@ -103,9 +103,9 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="grid min-h-full place-items-center p-6">
+      <div className="grid min-h-full place-items-center px-4 py-10 sm:px-6">
         <div className="card fade-up w-full max-w-md p-8 text-center">
-          <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-electric/15 text-electric-bright">
+          <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-electric/10 text-electric">
             <svg
               width="26"
               height="26"
@@ -119,7 +119,7 @@ export default function ProfilePage() {
               <path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0" />
             </svg>
           </div>
-          <h1 className="text-xl font-extrabold">{ar ? "سجل الدخول" : "Sign in"}</h1>
+          <h1 className="text-xl font-black tracking-tight">{ar ? "سجل الدخول" : "Sign in"}</h1>
           <p className="mt-2 text-sm text-muted">
             {ar
               ? "سجل الدخول لعرض ملفك وإدارة حجوزاتك."
@@ -137,10 +137,10 @@ export default function ProfilePage() {
   const initial = (name || user.email || "").trim().charAt(0).toUpperCase();
 
   return (
-    <div className="mx-auto max-w-xl space-y-4 p-6 lg:p-10">
+    <div className="mx-auto max-w-xl space-y-5 px-4 py-8 sm:px-6 lg:py-10">
       {/* Identity */}
       <div className="card fade-up p-7 text-center">
-        <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-electric/15 text-2xl font-extrabold text-electric-bright">
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-electric/10 text-2xl font-extrabold text-electric">
           {initial || (
             <svg
               width="26"
@@ -156,7 +156,7 @@ export default function ProfilePage() {
             </svg>
           )}
         </div>
-        <h1 className="mt-3 text-xl font-extrabold">{name || (ar ? "لاعب ميدان" : "Maydan player")}</h1>
+        <h1 className="mt-3 text-xl font-black tracking-tight">{name || (ar ? "لاعب ميدان" : "Maydan player")}</h1>
         <div className="mt-1 space-y-0.5 text-sm text-muted">
           {user.phoneNumber && <p dir="ltr">{formatPhone(user.phoneNumber)}</p>}
           {user.email && <p dir="ltr">{user.email}</p>}
@@ -185,7 +185,11 @@ export default function ProfilePage() {
         <LinkRow to="/terms" icon="terms" label={ar ? "الشروط والأحكام" : "Terms of service"} />
       </Rows>
 
-      <button type="button" onClick={() => void signOutUser()} className="btn btn-ghost w-full text-red-400 hover:text-red-300">
+      <button
+        type="button"
+        onClick={() => void signOutUser()}
+        className="btn w-full bg-surface text-red-600 ring-1 ring-red-200 ring-inset hover:bg-red-50 hover:text-red-700"
+      >
         {ar ? "تسجيل الخروج" : "Sign out"}
       </button>
     </div>

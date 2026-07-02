@@ -109,9 +109,9 @@ async function copyText(text: string): Promise<boolean> {
 
 function StatusPill({ status, ar }: { status: string; ar: boolean }) {
   const styles: Record<string, string> = {
-    confirmed: "bg-electric/15 text-electric-bright",
+    confirmed: "bg-electric/10 text-electric",
     completed: "bg-surface-2 text-muted",
-    cancelled: "bg-red-500/15 text-red-400",
+    cancelled: "bg-red-50 text-red-600",
   };
   const labels: Record<string, { en: string; ar: string }> = {
     confirmed: T.confirmed,
@@ -201,7 +201,7 @@ function BookingCard({
           <button
             onClick={() => onCancel(booking)}
             disabled={cancelling}
-            className="ms-auto rounded-full px-3 py-1.5 text-xs font-bold text-red-400 hover:bg-red-500/10 disabled:opacity-50"
+            className="ms-auto rounded-full px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 disabled:opacity-50"
           >
             {cancelling ? (ar ? T.cancelling.ar : T.cancelling.en) : ar ? T.cancel.ar : T.cancel.en}
           </button>
@@ -255,7 +255,7 @@ function JoinCard({ ar, name }: { ar: boolean; name: string }) {
           maxLength={6}
           placeholder="ABC123"
           dir="ltr"
-          className="w-40 rounded-xl border border-border bg-bg-soft px-3.5 py-2.5 text-sm font-bold uppercase tracking-[0.25em] text-ink placeholder:text-muted/50 focus:border-electric focus:outline-none"
+          className="w-40 rounded-xl border border-border bg-surface px-3.5 py-2.5 text-sm font-bold uppercase tracking-[0.25em] text-ink placeholder:text-muted/50 focus:border-electric focus:outline-none focus:ring-4 focus:ring-electric/15"
           aria-label={ar ? T.joinTitle.ar : T.joinTitle.en}
         />
         <button
@@ -267,7 +267,7 @@ function JoinCard({ ar, name }: { ar: boolean; name: string }) {
         </button>
       </div>
       {msg && (
-        <p className={`mt-3 text-sm ${msg.ok ? "text-electric-bright" : "text-red-400"}`}>
+        <p className={`mt-3 text-sm font-semibold ${msg.ok ? "text-electric-bright" : "text-red-600"}`}>
           {msg.text}
         </p>
       )}
@@ -328,7 +328,7 @@ export default function BookingsPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-3xl p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:py-10">
         <div className="card h-28 animate-pulse" />
       </div>
     );
@@ -336,9 +336,9 @@ export default function BookingsPage() {
 
   if (!user) {
     return (
-      <div className="grid h-full place-items-center p-8">
-        <div className="card fade-up max-w-md p-7 text-center">
-          <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-electric/15">
+      <div className="grid h-full place-items-center px-4 py-10 sm:px-6">
+        <div className="card fade-up max-w-md p-8 text-center">
+          <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-electric/10">
             <svg
               width="24"
               height="24"
@@ -364,10 +364,10 @@ export default function BookingsPage() {
   }
 
   return (
-    <div className="fade-up mx-auto max-w-3xl p-6 lg:p-8">
+    <div className="fade-up mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:py-10">
       <header>
-        <h1 className="text-2xl font-black">{ar ? T.title.ar : T.title.en}</h1>
-        <p className="mt-1 text-sm text-muted">{ar ? T.subtitle.ar : T.subtitle.en}</p>
+        <h1 className="text-2xl font-black tracking-tight sm:text-3xl">{ar ? T.title.ar : T.title.en}</h1>
+        <p className="mt-1.5 text-sm text-muted">{ar ? T.subtitle.ar : T.subtitle.en}</p>
       </header>
 
       <div className="mt-6 space-y-8">

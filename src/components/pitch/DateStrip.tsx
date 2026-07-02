@@ -25,8 +25,8 @@ export function DateStrip({
             onClick={() => onSelect(key)}
             className={`flex w-16 shrink-0 flex-col items-center rounded-2xl border px-2 py-2.5 ${
               active
-                ? "border-electric-bright/50 bg-electric/15 text-electric-bright"
-                : "border-border bg-surface text-muted hover:text-ink"
+                ? "border-electric/45 bg-electric/10 text-electric"
+                : "border-border bg-surface text-muted hover:border-electric/30 hover:text-ink"
             }`}
           >
             <span className="text-[11px] font-semibold uppercase">{parts.weekday}</span>

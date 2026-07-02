@@ -31,21 +31,21 @@ export function CourtList({
               !available
                 ? "cursor-not-allowed border-border bg-surface/50 opacity-50"
                 : active
-                  ? "border-electric-bright/50 bg-electric/15"
-                  : "border-border bg-surface hover:bg-surface-2"
+                  ? "border-electric/45 bg-electric/10"
+                  : "border-border bg-surface hover:border-electric/30 hover:bg-surface-2"
             }`}
           >
             <span
               className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${
-                active ? "border-electric-bright" : "border-muted"
+                active ? "border-electric" : "border-muted"
               }`}
             >
-              {active && <span className="h-2.5 w-2.5 rounded-full bg-electric-bright" />}
+              {active && <span className="h-2.5 w-2.5 rounded-full bg-electric" />}
             </span>
             <span className="min-w-0 flex-1">
               <span
                 className={`block truncate font-bold ${
-                  !available ? "line-through" : active ? "text-electric-bright" : "text-ink"
+                  !available ? "line-through" : active ? "text-electric" : "text-ink"
                 }`}
               >
                 {c.name}
@@ -56,7 +56,7 @@ export function CourtList({
             </span>
             <span
               className={`shrink-0 text-sm font-bold ${
-                active ? "text-electric-bright" : "text-ink"
+                active ? "text-electric" : "text-ink"
               }`}
             >
               {omr(c.pricePerHour)}

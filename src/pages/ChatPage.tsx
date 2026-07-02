@@ -201,34 +201,36 @@ export default function ChatPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <header className="flex items-center gap-3 border-b border-border px-5 py-4 lg:px-8">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border-[1.5px] border-electric">
-          <img src="/assets/img/logo_electric_blue.svg" alt="" className="h-[18px] w-[18px]" />
-        </div>
-        <div className="min-w-0">
-          <h1 className="text-lg font-bold leading-tight">{t.title}</h1>
-          <p className="text-[11px] font-semibold text-muted">{t.beta}</p>
-        </div>
-        <button
-          onClick={newChat}
-          className="ms-auto grid h-10 w-10 place-items-center rounded-xl text-muted hover:bg-surface hover:text-ink"
-          aria-label={t.newChat}
-          title={t.newChat}
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <header className="border-b border-border">
+        <div className="mx-auto flex w-full max-w-3xl items-center gap-3 px-5 py-4 lg:px-8">
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border-[1.5px] border-electric bg-surface">
+            <img src="/assets/img/logo_electric_blue.svg" alt="" className="h-[18px] w-[18px]" />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-lg font-black leading-tight tracking-tight">{t.title}</h1>
+            <p className="text-[11px] font-semibold text-muted">{t.beta}</p>
+          </div>
+          <button
+            onClick={newChat}
+            className="ms-auto grid h-10 w-10 place-items-center rounded-xl text-muted hover:bg-electric/10 hover:text-electric"
+            aria-label={t.newChat}
+            title={t.newChat}
           >
-            <path d="M11 4H5a1 1 0 00-1 1v14a1 1 0 001 1h14a1 1 0 001-1v-6" />
-            <path d="M17.7 3.3a2 2 0 013 3L12 15l-4 1 1-4 8.7-8.7z" />
-          </svg>
-        </button>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M11 4H5a1 1 0 00-1 1v14a1 1 0 001 1h14a1 1 0 001-1v-6" />
+              <path d="M17.7 3.3a2 2 0 013 3L12 15l-4 1 1-4 8.7-8.7z" />
+            </svg>
+          </button>
+        </div>
       </header>
 
       {/* Messages */}
@@ -238,7 +240,7 @@ export default function ChatPage() {
             if (m.isUser) {
               return (
                 <div key={m.id} className="flex justify-end fade-up">
-                  <div className="max-w-[82%] rounded-[20px] bg-ink/10 px-4 py-2.5 text-[15px] leading-relaxed">
+                  <div className="max-w-[82%] rounded-[20px] bg-electric px-4 py-2.5 text-[15px] leading-relaxed text-white shadow-[0_2px_10px_rgba(37,99,235,0.28)]">
                     {m.text}
                   </div>
                 </div>
@@ -261,7 +263,7 @@ export default function ChatPage() {
       <div className="px-5 pb-5 pt-1 lg:px-8">
         <form
           onSubmit={send}
-          className="card mx-auto flex w-full max-w-3xl items-center gap-2 py-2 ps-5 pe-2"
+          className="card mx-auto flex w-full max-w-3xl items-center gap-2 py-2 ps-5 pe-2 focus-within:border-electric/40 focus-within:shadow-[0_2px_6px_rgba(13,27,50,0.04),0_12px_32px_rgba(37,99,235,0.14)]"
           style={{ borderRadius: 999 }}
         >
           <input

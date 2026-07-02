@@ -67,11 +67,11 @@ export function PitchCard({
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
       className={`card w-full overflow-hidden text-start ${
-        selected ? "ring-1 ring-electric-bright" : "card-hover"
+        selected ? "ring-2 ring-electric" : "card-hover"
       }`}
     >
       {/* Accent banner: brand watermark, photo when present, tags and price. */}
-      <div className="relative h-28" style={{ backgroundColor: accentColor(pitch.accentHex) }}>
+      <div className="relative h-32" style={{ backgroundColor: accentColor(pitch.accentHex) }}>
         {pitch.imageURL && (
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -83,7 +83,7 @@ export function PitchCard({
           alt=""
           className="pointer-events-none absolute -top-3 -end-5 h-24 w-24 opacity-15"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/45" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/5 via-transparent to-black/55" />
         <div className="absolute bottom-2.5 start-3 flex items-center gap-1.5">
           {surface && <Tag>{ar ? surface.ar : surface.en}</Tag>}
           {size && <Tag>{size}</Tag>}
@@ -95,7 +95,7 @@ export function PitchCard({
         </div>
       </div>
 
-      <div className="p-3.5">
+      <div className="p-4">
         <div className="flex items-center justify-between gap-2">
           <span className="min-w-0 truncate text-[15px] font-bold">
             {pitch.name}
@@ -105,7 +105,7 @@ export function PitchCard({
           </span>
           {pitch.rating > 0 && (
             <span className="shrink-0 text-[12px] font-semibold text-muted">
-              <span className="text-amber-400">★</span> {pitch.rating.toFixed(1)}
+              <span className="text-amber-500">★</span> {pitch.rating.toFixed(1)}
               {pitch.reviewCount > 0 ? ` (${pitch.reviewCount})` : ""}
             </span>
           )}

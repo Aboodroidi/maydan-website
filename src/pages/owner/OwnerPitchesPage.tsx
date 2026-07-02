@@ -137,16 +137,18 @@ export default function OwnerPitchesPage() {
               ? "لا توجد ملاعب مرتبطة بهذا الحساب بعد. أدر ملاعبك من تطبيق iOS أو تواصل مع ميدان."
               : "No pitches linked to this account yet. Manage pitches from the iOS app or contact Maydan."}
           </p>
-          {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+          {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-5 p-6 lg:p-8 fade-up">
+    <div className="mx-auto w-full max-w-4xl space-y-5 px-4 py-6 sm:px-6 fade-up">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className="text-2xl font-extrabold">{ar ? "ملاعبي" : "My pitches"}</h1>
+        <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
+          {ar ? "ملاعبي" : "My pitches"}
+        </h1>
         <p className="text-sm text-muted">
           {ar ? `${pitches.length} ملاعب` : `${pitches.length} pitches`}
         </p>
@@ -159,10 +161,10 @@ export default function OwnerPitchesPage() {
             {/* Header row */}
             <div className="flex items-center gap-3">
               <div
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-xl"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-b from-black/0 to-black/15 ring-1 ring-ink/10 ring-inset"
                 style={{ backgroundColor: accentCss(pitch.accentHex) }}
               >
-                <img src="/assets/img/logo_white.svg" alt="" className="h-5 w-5 opacity-90" />
+                <img src="/assets/img/logo_white.svg" alt="" className="h-5 w-5 drop-shadow-sm" />
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="truncate text-base font-bold">{pitch.name}</h2>
@@ -171,7 +173,7 @@ export default function OwnerPitchesPage() {
                   {omr(pitch.pricePerHour)} {ar ? "للساعة" : "per hour"}
                 </p>
               </div>
-              <span className="shrink-0 rounded-full bg-electric/15 px-2.5 py-1 text-[11px] font-bold text-electric-bright">
+              <span className="shrink-0 rounded-full bg-electric/10 px-2.5 py-1 text-[11px] font-bold text-electric">
                 {tierLabel(pitch.tier, ar)}
               </span>
             </div>
@@ -182,17 +184,17 @@ export default function OwnerPitchesPage() {
                 <span className="text-muted">{ar ? "جارٍ الحفظ…" : "Saving…"}</span>
               )}
               {state?.state === "saved" && (
-                <span className="font-semibold text-emerald-400">{ar ? "تم الحفظ" : "Saved"}</span>
+                <span className="font-semibold text-emerald-600">{ar ? "تم الحفظ" : "Saved"}</span>
               )}
               {state?.state === "error" && (
-                <span className="text-red-400">
+                <span className="text-red-600">
                   {ar ? "تعذر الحفظ." : "Could not save."} {state.message}
                 </span>
               )}
             </div>
 
             {/* Pitch-level price */}
-            <div className="mt-2 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-bg-soft p-3">
+            <div className="mt-2 flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface-2 p-3">
               <label
                 htmlFor={`price-${pitch.id}`}
                 className="text-[13px] font-semibold text-muted"
@@ -210,7 +212,7 @@ export default function OwnerPitchesPage() {
                 onChange={(e) =>
                   setPriceDrafts((d) => ({ ...d, [pitch.id]: e.target.value }))
                 }
-                className="w-24 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-bold outline-none focus:border-electric-bright"
+                className="w-24 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-bold outline-none focus:border-electric focus:ring-2 focus:ring-electric/20"
               />
               <button
                 className="btn btn-primary !px-4 !py-2 !text-[13px]"
@@ -262,7 +264,7 @@ export default function OwnerPitchesPage() {
                             onChange={(e) =>
                               setPriceDrafts((d) => ({ ...d, [key]: e.target.value }))
                             }
-                            className="w-20 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm font-bold outline-none focus:border-electric-bright"
+                            className="w-20 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm font-bold outline-none focus:border-electric focus:ring-2 focus:ring-electric/20"
                           />
                           <button
                             className="btn btn-ghost !px-3 !py-1.5 !text-[12px]"
@@ -282,7 +284,7 @@ export default function OwnerPitchesPage() {
                             aria-label={ar ? "تبديل الإتاحة" : "Toggle availability"}
                             onClick={() => toggleCourt(pitch, court)}
                             className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-                              on ? "bg-electric" : "bg-surface-2 border border-border"
+                              on ? "bg-electric" : "bg-ink/15"
                             }`}
                           >
                             <span

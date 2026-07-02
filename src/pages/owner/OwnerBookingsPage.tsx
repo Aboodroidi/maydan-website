@@ -39,10 +39,10 @@ function statusLabel(status: string, ar: boolean): string {
 function StatusPill({ status, ar }: { status: string; ar: boolean }) {
   const tone =
     status === "cancelled"
-      ? "bg-red-500/10 text-red-400"
+      ? "bg-red-600/10 text-red-600"
       : status === "completed"
-        ? "bg-white/10 text-muted"
-        : "bg-electric/15 text-electric-bright";
+        ? "bg-ink/5 text-muted"
+        : "bg-electric/10 text-electric";
   return (
     <span className={`inline-block shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ${tone}`}>
       {statusLabel(status, ar)}
@@ -165,7 +165,7 @@ export default function OwnerBookingsPage() {
             {ar ? "إكمال" : "Complete"}
           </button>
           <button
-            className="btn btn-ghost !px-3 !py-1.5 !text-[12px] !text-red-400"
+            className="btn btn-ghost !px-3 !py-1.5 !text-[12px] !text-red-600"
             disabled={busy}
             onClick={() => void act(b, "cancelled")}
           >
@@ -191,9 +191,11 @@ export default function OwnerBookingsPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-5 p-6 lg:p-8 fade-up">
+    <div className="mx-auto w-full max-w-[1400px] space-y-5 px-4 py-6 sm:px-6 fade-up">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className="text-2xl font-extrabold">{ar ? "حجوزات الملاعب" : "Pitch bookings"}</h1>
+        <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
+          {ar ? "حجوزات الملاعب" : "Pitch bookings"}
+        </h1>
         <p className="text-sm text-muted">
           {ar ? `${bookings.length} حجز` : `${bookings.length} bookings`}
         </p>
@@ -212,7 +214,7 @@ export default function OwnerBookingsPage() {
         ))}
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
       {bookings.length === 0 ? (
         <div className="card p-7 text-center">
@@ -226,7 +228,7 @@ export default function OwnerBookingsPage() {
           <div className="card hidden overflow-hidden md:block">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border text-start text-[12px] uppercase tracking-wide text-muted">
+                <tr className="border-b border-border bg-surface-2/60 text-start text-[12px] uppercase tracking-wide text-muted">
                   <th className="px-5 py-3 text-start font-semibold">{ar ? "العميل" : "Customer"}</th>
                   <th className="px-5 py-3 text-start font-semibold">{ar ? "الملعب" : "Pitch"}</th>
                   <th className="px-5 py-3 text-start font-semibold">{ar ? "الموعد" : "When"}</th>
@@ -237,7 +239,7 @@ export default function OwnerBookingsPage() {
               </thead>
               <tbody className="divide-y divide-[color:var(--color-border)]">
                 {bookings.map((b) => (
-                  <tr key={b.id} className="hover:bg-surface-2/40">
+                  <tr key={b.id} className="hover:bg-surface-2">
                     <td className="px-5 py-3.5">
                       <p className="font-bold">{b.customerName || (ar ? "زائر" : "Guest")}</p>
                       {b.customerPhone && (
