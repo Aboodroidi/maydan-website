@@ -1,0 +1,5 @@
+# Serve the Apple App Site Association file as JSON (no extension) so iOS
+# Universal Links validate. Applies when Apache processes the directory.
+<Files "apple-app-site-association">
+  ForceType application/json
+</Files>
