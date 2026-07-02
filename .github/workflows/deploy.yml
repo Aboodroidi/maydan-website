@@ -1,7 +1,7 @@
 name: Build & publish static site
 
-# The Next.js source lives on the `source` branch. On every push to `source`
-# this builds the static export (out/) and publishes it to `main`, which Plesk
+# The Vite source lives on the `source` branch. On every push to `source`
+# this builds the app (dist/) and publishes it to `main`, which Plesk
 # serves directly as maydan.om. Edit on `source`; `main` is generated. See DEPLOY.md.
 
 on:
@@ -30,18 +30,20 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
-          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
-          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID }}
-          NEXT_PUBLIC_GOOGLE_MAPS_KEY: ${{ vars.NEXT_PUBLIC_GOOGLE_MAPS_KEY }}
-          NEXT_PUBLIC_GOOGLE_MAP_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_MAP_ID }}
+          # Reuse the existing repository variables (named for the old
+          # Next.js build) so nothing needs reconfiguring in GitHub.
+          VITE_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID }}
+          VITE_GOOGLE_MAPS_KEY: ${{ vars.NEXT_PUBLIC_GOOGLE_MAPS_KEY }}
+          VITE_GOOGLE_MAP_ID: ${{ vars.NEXT_PUBLIC_GOOGLE_MAP_ID }}
 
       - name: Publish built site to main (served by Plesk)
         run: |
-          cd out
+          cd dist
           touch .nojekyll
           git init -q
           git config user.name "github-actions[bot]"
