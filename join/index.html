@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Join a booking — Maydan</title>
+<link rel="icon" type="image/svg+xml" href="../assets/img/logo_electric_blue.svg" />
+<link rel="stylesheet" href="../assets/css/styles.css" />
+<style>
+  .join-wrap { min-height: 80vh; display: grid; place-items: center; text-align: center; padding: 40px 24px; }
+  .code { font-family: 'Winco', monospace; font-weight: 900; font-size: 40px; letter-spacing: 6px;
+          color: var(--blue); background: var(--surface); border-radius: 16px; padding: 18px 28px; display: inline-block; margin: 8px 0 24px; }
+  .join-wrap h1 { font-size: clamp(26px, 5vw, 38px); font-weight: 900; }
+  .join-wrap p { color: var(--muted); font-size: 17px; max-width: 460px; margin: 14px auto 0; }
+</style>
+</head>
+<body>
+  <div class="join-wrap">
+    <div>
+      <img src="../assets/img/wordmark_electric_blue.svg" alt="Maydan" style="height:40px;margin-bottom:28px;" />
+      <h1>Join the booking</h1>
+      <div class="code" id="code">––––––</div>
+      <p>Opening the Maydan app… If nothing happens, open the app and enter the code above to join and pay your share.</p>
+      <p><a class="btn" id="openApp" style="margin-top:18px" href="#">Open Maydan</a></p>
+    </div>
+  </div>
+<script>
+  var code = (new URLSearchParams(location.search).get('c') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  if (code) {
+    document.getElementById('code').textContent = code;
+    var deep = 'maydan://join/' + code;
+    document.getElementById('openApp').href = deep;
+    // Try to open the app automatically.
+    setTimeout(function () { location.href = deep; }, 400);
+  }
+</script>
+</body>
+</html>

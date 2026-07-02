@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <g transform="translate(300,300)" opacity="0.05">
+    <path d="
+      M -160,-180
+      L -160,180
+      L -110,180
+      L -110,-100
+      L 0,-10
+      L 110,-100
+      L 110,180
+      L 160,180
+      L 160,-180
+      L 0,-20
+      Z
+    " fill="#FFFFFF"/>
+    <circle cx="0" cy="120" r="38" fill="#FFFFFF"/>
+  </g>
+</svg>
